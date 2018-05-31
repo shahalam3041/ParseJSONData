@@ -5,6 +5,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,8 +39,10 @@ public class MainActivity extends AppCompatActivity {
             HttpURLConnection httpURLConnection = null;
             BufferedReader bufferedReader = null;
 
+            String name;
+            Integer age;
             try {
-                URL url = new URL("https://api.myjson.com/bins/xcvpq");
+                URL url = new URL("https://api.myjson.com/bins/onya6");
                 httpURLConnection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = httpURLConnection.getInputStream();
                 bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
@@ -47,14 +53,24 @@ public class MainActivity extends AppCompatActivity {
                     stringBuffer.append(line);
                 }
 
-                return stringBuffer.toString();
+                String file = stringBuffer.toString();
+                JSONObject fileObject = new JSONObject(file);
+                JSONArray jsonArray = fileObject.getJSONArray("Student");
+                JSONObject arrayObject = jsonArray.getJSONObject(0);
+
+                name = arrayObject.getString("Name");
+                age = arrayObject.getInt("Age");
+
+                return name+"\n" +age;
 
 
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
-            }finally {
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
                 httpURLConnection.disconnect();
                 try {
                     bufferedReader.close();
