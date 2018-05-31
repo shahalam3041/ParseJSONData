@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
                 bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
                 StringBuffer stringBuffer = new StringBuffer();
                 String line = "";
+
+                StringBuffer lastBuffer = new StringBuffer();
                 while ((line = bufferedReader.readLine() )!= null ) {
 
                     stringBuffer.append(line);
@@ -56,12 +58,16 @@ public class MainActivity extends AppCompatActivity {
                 String file = stringBuffer.toString();
                 JSONObject fileObject = new JSONObject(file);
                 JSONArray jsonArray = fileObject.getJSONArray("Student");
-                JSONObject arrayObject = jsonArray.getJSONObject(0);
 
-                name = arrayObject.getString("Name");
-                age = arrayObject.getInt("Age");
+                for(int i=0; i<jsonArray.length(); i++) {
+                    JSONObject arrayObject = jsonArray.getJSONObject(i);
 
-                return name+"\n" +age;
+                    name = arrayObject.getString("Name");
+                    age = arrayObject.getInt("Age") ;
+                    lastBuffer.append(name+"\n"+age+"\n\n");
+                }
+
+                return lastBuffer.toString();
 
 
             } catch (MalformedURLException e) {
